@@ -64,6 +64,14 @@ void GroupAddChild(Group *g, Group *child) {
   lastChild->next = child;
 }
 
+void TreeAddChild(char* keys, Group* tree, Group* child) {
+  printf("TreeAddChild: %s -> %s\n", keys, child->name);
+}
+
+void TreeAddCommand(char *keys, Group* tree, Command* child) {
+  printf("TreeAddcommand: %s -> %s -> %s\n", keys, child->name, child->command);
+}
+
 void GroupAddCommand(Group *g, Command *cmd) {
   Command *lastCommand = g->commands;
   if (lastCommand == NULL) {
@@ -91,7 +99,9 @@ Command *FindCommand(Group *g, char key) {
 }
 
 void PrintGroup(Group *g) {
-  printf("%s%s:%s\n", Blue, g->name, ColorOff);
+  if( g->name )
+    printf("%s%s:%s\n", Blue, g->name, ColorOff);
+
 
   Group* child = g->children;
   while(child) {
@@ -137,20 +147,99 @@ char getch(void) {
   return (buf);
 }
 
-Group* BuildRoot(void) {
-  Group *root = NewGroup('-', "Root");
+char* ReadFile(char* file) {
+  FILE* f = fopen(file, "r");
+  if( f == NULL ) {
+    perror("Failed to open file");
+    exit(EXIT_FAILURE);
+  }
 
-  Group *git = NewGroup('g', "Git");
-  GroupAddChild(root, git);
+  fseek(f, 0, SEEK_END);
+  long fileSize = ftell(f);
+  rewind(f);
 
-  Command *git_status = NewCommand('s', "Status", "git status");
-  GroupAddCommand(git, git_status);
+  char* content = (char*) malloc(fileSize+1);
+  fread(content, fileSize, 1, f);
+  content[fileSize] = 0;
+  fclose(f);
 
-  return root;
+  return content;
 }
 
-int main() {
-  Group* currentGroup = BuildRoot();
+char* NextSeparator(char* file) {
+  while( *file != ',' && *file != '\n' && *file != 0 ) file++;
+  return file;
+}
+
+char* NextEndOfLine(char* file) {
+  while( *file != '\n' && *file != 0 ) file++;
+  return file;
+}
+
+
+void LoadFile(Group *g, char* file) {
+  char* content = ReadFile(file);
+
+  bool eof = false;
+  int line = 0;
+
+  while(!eof) {
+    char* key = content;
+    char* keySep = NextSeparator(key);
+
+    if( *keySep == '\n' ) {
+      printf("Found new line after key while a name is expected: %d", line);
+      exit(EXIT_FAILURE);
+    } else if ( *keySep == 0 ) {
+      printf("Found end of file after key while a name is expected: %d", line);
+      exit(EXIT_FAILURE);
+    }
+
+    *keySep = 0;
+
+    char* name = keySep+1;
+    char* nameSep = NextSeparator(name);
+
+    if( *nameSep == '\n' ) {
+      *nameSep = 0;
+      Group* childGroup = NewGroup(*(keySep-1), name);
+      TreeAddChild(key, g, childGroup);
+      line++;
+
+    } else if ( *nameSep == 0 ) {
+      Group* childGroup = NewGroup(*(keySep-1), name);
+      TreeAddChild(key, g, childGroup);
+      eof = true;
+
+    }else {
+      char* command = nameSep+1;
+      char* commandSep = NextEndOfLine(command);
+      if( *commandSep != '\n' && *commandSep != 0 ){
+        printf("Didn't find new line nor end of file after command: %d", line);
+        exit(EXIT_FAILURE);
+      }
+
+      if( *commandSep == 0 ) eof = true;
+
+      *commandSep = 0;
+      Command* childCommand = NewCommand(*(commandSep-1), name, command);
+      TreeAddCommand(key, g, childCommand);
+      line++;
+
+      content = commandSep+1;
+    }
+  }
+}
+
+int main(int argc, char** argv) {
+  if( argc == 1 ) {
+    printf("Must provide at least one hydra file");
+    return EXIT_FAILURE;
+  }
+
+  Group* currentGroup = NewGroup(0, 0);
+
+  for(int i=1; i<argc; i++) LoadFile(currentGroup, argv[i]);
 
   while(true) {
     PrintGroup(currentGroup);
@@ -168,5 +257,6 @@ int main() {
       break;
     }
   }
-  return 0;
+
+  return EXIT_SUCCESS;
 }
