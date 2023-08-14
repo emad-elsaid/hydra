@@ -4,6 +4,15 @@
 #include <termios.h>
 #include <unistd.h>
 
+#define ColorOff "\033[0m"
+#define Red "\033[0;31m"
+#define Green "\033[0;32m"
+#define Yellow "\033[0;33m"
+#define Blue "\033[0;34m"
+#define Purple "\033[0;35m"
+#define Cyan "\033[0;36m"
+#define White "\033[0;37m"
+
 typedef struct Command {
   char key;
   char* name;
@@ -43,22 +52,20 @@ Group* NewGroup(char key, char* name) {
   return grp;
 }
 
-
 void PrintGroup(Group* g) {
-  printf("> %s\n", g->name);
+  printf("%s%s%s\n", Blue, g->name, ColorOff);
 
   Group* child = g->children;
   while(child) {
-    printf("%c %s\t\t", child->key, child->name);
+    printf("%s%c%s ➔ +%s\t\t", Yellow, child->key, ColorOff, child->name);
     child = child->next;
   }
 
   Command* command = g->commands;
   while(command) {
-    printf("%c %s\t\t", command->key, command->name);
+    printf("%s%c%s ➔ %s\t\t", Yellow, command->key, ColorOff, command->name);
     command = command->next;
   }
-
 
   printf("\n");
 }
