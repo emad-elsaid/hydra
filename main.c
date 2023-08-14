@@ -57,10 +57,10 @@ void PrintGroup(Group* g) {
 
   Group* child = g->children;
   while(child) {
-    printf("%s%c%s %s➔%s +%s\t\t",
+    printf("%s%c%s %s➔%s %s+%s%s\t\t",
            Yellow, child->key, ColorOff,
            Purple, ColorOff,
-           child->name);
+           Blue, child->name, ColorOff);
     child = child->next;
   }
 
