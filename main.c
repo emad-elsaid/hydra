@@ -52,8 +52,46 @@ Group* NewGroup(char key, char* name) {
   return grp;
 }
 
-void PrintGroup(Group* g) {
-  printf("%s%s%s\n", Blue, g->name, ColorOff);
+void GroupAddChild(Group *g, Group *child) {
+  Group *lastChild = g->children;
+  if (lastChild == NULL) {
+    g->children = child;
+    return;
+  }
+
+  while (lastChild->next != NULL)
+    lastChild = lastChild->next;
+  lastChild->next = child;
+}
+
+void GroupAddCommand(Group *g, Command *cmd) {
+  Command *lastCommand = g->commands;
+  if (lastCommand == NULL) {
+    g->commands = cmd;
+    return;
+  }
+
+  while (lastCommand->next != NULL)
+    lastCommand = lastCommand->next;
+  lastCommand->next = cmd;
+}
+
+Group *FindGroup(Group *g, char key) {
+  Group *child = g->children;
+  while (child != NULL && child->key != key)
+    child = child->next;
+  return child;
+}
+
+Command *FindCommand(Group *g, char key) {
+  Command *child = g->commands;
+  while (child != NULL && child->key != key)
+    child = child->next;
+  return child;
+}
+
+void PrintGroup(Group *g) {
+  printf("%s%s:%s\n", Blue, g->name, ColorOff);
 
   Group* child = g->children;
   while(child) {
@@ -74,41 +112,6 @@ void PrintGroup(Group* g) {
   }
 
   printf("\n");
-}
-
-void GroupAddChild(Group* g, Group* child) {
-  Group* lastChild = g->children;
-  if(lastChild == NULL){
-      g->children = child;
-      return;
-  }
-
-  while(lastChild->next!=NULL) lastChild = lastChild->next;
-  lastChild->next = child;
-}
-
-void GroupAddCommand(Group* g, Command* cmd) {
-  Command* lastCommand = g->commands;
-  if( lastCommand == NULL ) {
-    g->commands = cmd;
-    return;
-  }
-
-  while(lastCommand->next!=NULL) lastCommand = lastCommand->next;
-  lastCommand->next = cmd;
-}
-
-Group *FindGroup(Group *g, char key) {
-  Group *child = g->children;
-  while (child != NULL && child->key != key)
-    child = child->next;
-  return child;
-}
-
-Command *FindCommand(Group *g, char key) {
-  Command* child = g->commands;
-  while( child != NULL && child->key != key) child = child->next;
-  return child;
 }
 
 // Copied from: https://stackoverflow.com/a/912796/458436
