@@ -57,13 +57,19 @@ void PrintGroup(Group* g) {
 
   Group* child = g->children;
   while(child) {
-    printf("%s%c%s ➔ +%s\t\t", Yellow, child->key, ColorOff, child->name);
+    printf("%s%c%s %s➔%s +%s\t\t",
+           Yellow, child->key, ColorOff,
+           Purple, ColorOff,
+           child->name);
     child = child->next;
   }
 
   Command* command = g->commands;
   while(command) {
-    printf("%s%c%s ➔ %s\t\t", Yellow, command->key, ColorOff, command->name);
+    printf("%s%c%s %s➔%s %s\t\t",
+           Yellow, command->key, ColorOff,
+           Purple, ColorOff,
+           command->name);
     command = command->next;
   }
 
