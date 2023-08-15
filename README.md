@@ -34,3 +34,10 @@ hydra hydras/git hydras/systemd hydras/github
 ```
 
 Hydra will load the files in the order passed.
+
+
+# Project status
+
+The project is still in the prototype phase. I haven't written C in a while (10+
+years) so I'm a bit rusty. probably there could be a lot of improvements.
+However I would encourage you to try it out.
