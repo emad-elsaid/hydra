@@ -64,12 +64,18 @@ void GroupAddChild(Group *g, Group *child) {
   lastChild->next = child;
 }
 
-void TreeAddChild(Group* tree, char* keys, char* name) {
-  printf("TreeAddChild: %s -> %s\n", keys, name);
+Group *FindGroup(Group *g, char key) {
+  Group *child = g->children;
+  while (child != NULL && child->key != key)
+    child = child->next;
+  return child;
 }
 
-void TreeAddCommand(Group* tree, char* keys, char* name, char* command) {
-  printf("TreeAddcommand: %s -> %s -> %s\n", keys, name, command);
+Command *FindCommand(Group *g, char key) {
+  Command *child = g->commands;
+  while (child != NULL && child->key != key)
+    child = child->next;
+  return child;
 }
 
 void GroupAddCommand(Group *g, Command *cmd) {
@@ -84,18 +90,36 @@ void GroupAddCommand(Group *g, Command *cmd) {
   lastCommand->next = cmd;
 }
 
-Group *FindGroup(Group *g, char key) {
-  Group *child = g->children;
-  while (child != NULL && child->key != key)
-    child = child->next;
-  return child;
+void TreeAddGroup(Group *tree, char *keys, char *name) {
+  if( *(keys+1) == 0 ) {
+    GroupAddChild(tree, NewGroup(*keys, name));
+    return;
+  }
+
+  Group* g = FindGroup(tree, *keys);
+  if( g == NULL ) {
+    // TODO create the group with unnamed name if it doesn't exist instead of failing
+    printf("Can't find a group with '%c' key", *keys);
+    exit(EXIT_FAILURE);
+  }
+
+  TreeAddGroup(g, keys + 1, name);
 }
 
-Command *FindCommand(Group *g, char key) {
-  Command *child = g->commands;
-  while (child != NULL && child->key != key)
-    child = child->next;
-  return child;
+void TreeAddCommand(Group *tree, char *keys, char *name, char *command) {
+  if (*(keys + 1) == 0) {
+    GroupAddCommand(tree, NewCommand(*keys, name, command));
+    return;
+  }
+
+  Group *g = FindGroup(tree, *keys);
+  if( g == NULL ) {
+    // TODO create the group with unnamed name if it doesn't exist instead of failing
+    printf("Can't find a group with '%c' key", *keys);
+    exit(EXIT_FAILURE);
+  }
+
+  TreeAddCommand(g, keys+1, name, command);
 }
 
 void PrintGroup(Group *g) {
@@ -215,7 +239,7 @@ void ReadLine(Group* g, char** file) {
   char* command = ReadCommand(file);
 
   if( *command == 0 ) {
-    TreeAddChild(g, key, name);
+    TreeAddGroup(g, key, name);
   } else {
     TreeAddCommand(g, key, name, command);
   }
