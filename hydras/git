@@ -1,2 +1,4 @@
 g,Git,
+gi,Init,git init
 gs,Status,git status
+gl,Log,git log
