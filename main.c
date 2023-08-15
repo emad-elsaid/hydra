@@ -64,12 +64,12 @@ void GroupAddChild(Group *g, Group *child) {
   lastChild->next = child;
 }
 
-void TreeAddChild(char* keys, Group* tree, Group* child) {
-  printf("TreeAddChild: %s -> %s\n", keys, child->name);
+void TreeAddChild(Group* tree, char* keys, char* name) {
+  printf("TreeAddChild: %s -> %s\n", keys, name);
 }
 
-void TreeAddCommand(char *keys, Group* tree, Command* child) {
-  printf("TreeAddcommand: %s -> %s -> %s\n", keys, child->name, child->command);
+void TreeAddCommand(Group* tree, char* keys, char* name, char* command) {
+  printf("TreeAddcommand: %s -> %s -> %s\n", keys, name, command);
 }
 
 void GroupAddCommand(Group *g, Command *cmd) {
@@ -166,69 +166,64 @@ char* ReadFile(char* file) {
   return content;
 }
 
-char* NextSeparator(char* file) {
-  while( *file != ',' && *file != '\n' && *file != 0 ) file++;
-  return file;
+char* ReadKey(char** file) {
+  char* key = *file;
+  while(**file != ',' && **file != '\n' && **file != 0) (*file)++;
+
+  if( **file != ',') {
+    printf("Found incorrect end after key, found: %c", **file);
+    exit(EXIT_FAILURE);
+  }
+
+  **file = 0;
+  (*file)++;
+
+  return key;
 }
 
-char* NextEndOfLine(char* file) {
-  while( *file != '\n' && *file != 0 ) file++;
-  return file;
+char *ReadName(char **file) {
+  char *name = *file;
+  while (**file != ',' && **file != '\n' && **file != 0)
+    (*file)++;
+
+  if (**file != ',') {
+    printf("Found incorrect end after name, found: %c", **file);
+    exit(EXIT_FAILURE);
+  }
+
+  **file = 0;
+  (*file)++;
+
+  return name;
 }
 
+char* ReadCommand(char** file) {
+  char* command = *file;
+  while(**file != '\n' && **file != 0) (*file)++;
+
+  if(**file == '\n') {
+    **file = 0;
+    (*file)++;
+  }
+
+  return command;
+}
+
+void ReadLine(Group* g, char** file) {
+  char* key = ReadKey(file);
+  char* name = ReadName(file);
+  char* command = ReadCommand(file);
+
+  if( *command == 0 ) {
+    TreeAddChild(g, key, name);
+  } else {
+    TreeAddCommand(g, key, name, command);
+  }
+}
 
 void LoadFile(Group *g, char* file) {
   char* content = ReadFile(file);
-
-  bool eof = false;
-  int line = 0;
-
-  while(!eof) {
-    char* key = content;
-    char* keySep = NextSeparator(key);
-
-    if( *keySep == '\n' ) {
-      printf("Found new line after key while a name is expected: %d", line);
-      exit(EXIT_FAILURE);
-    } else if ( *keySep == 0 ) {
-      printf("Found end of file after key while a name is expected: %d", line);
-      exit(EXIT_FAILURE);
-    }
-
-    *keySep = 0;
-
-    char* name = keySep+1;
-    char* nameSep = NextSeparator(name);
-
-    if( *nameSep == '\n' ) {
-      *nameSep = 0;
-      Group* childGroup = NewGroup(*(keySep-1), name);
-      TreeAddChild(key, g, childGroup);
-      line++;
-
-    } else if ( *nameSep == 0 ) {
-      Group* childGroup = NewGroup(*(keySep-1), name);
-      TreeAddChild(key, g, childGroup);
-      eof = true;
-
-    }else {
-      char* command = nameSep+1;
-      char* commandSep = NextEndOfLine(command);
-      if( *commandSep != '\n' && *commandSep != 0 ){
-        printf("Didn't find new line nor end of file after command: %d", line);
-        exit(EXIT_FAILURE);
-      }
-
-      if( *commandSep == 0 ) eof = true;
-
-      *commandSep = 0;
-      Command* childCommand = NewCommand(*(commandSep-1), name, command);
-      TreeAddCommand(key, g, childCommand);
-      line++;
-
-      content = commandSep+1;
-    }
-  }
+  while( *content != 0 ) ReadLine(g, &content);
 }
 
 int main(int argc, char** argv) {
