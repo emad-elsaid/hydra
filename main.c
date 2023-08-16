@@ -92,6 +92,8 @@ char getch(void) {
 
   if (tcgetattr(0, &old) < 0) perror("tcsetattr()");
 
+  tcflag_t oldflags = old.c_lflag;
+
   old.c_lflag &= ~ICANON;
   old.c_lflag &= ~ECHO;
   old.c_cc[VMIN] = 1;
@@ -102,8 +104,7 @@ char getch(void) {
   char buf = 0;
   if (read(0, &buf, 1) < 0) perror("read()");
 
-  old.c_lflag |= ICANON;
-  old.c_lflag |= ECHO;
+  old.c_lflag = oldflags;
 
   if (tcsetattr(0, TCSADRAIN, &old) < 0) perror("tcsetattr ~ICANON");
   return (buf);
