@@ -13,7 +13,7 @@ make build
 
 # Hydra file
 
-* Hydra files are simple CSV files that define the groups and commands hydra can load.
+* Hydra files are simple CSV files that define the commands hydra can load.
 * The file has 3 columns without header. an example is under `hydras` directory in this repo.
 
 a simple example can be as follow
@@ -22,8 +22,8 @@ g,Git,
 gs,Status,git status
 ```
 
-* it defines `Git` group under the key `g`
-* and defines a command named `Status` under key `s` inside group `g` that will execute the command `git status`
+* it defines `Git` command that doesn't execute a command under the key `g`
+* and defines a command named `Status` under key `s` inside `g` that will execute the command `git status`
 
 # Running
 
