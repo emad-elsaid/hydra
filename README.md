@@ -8,7 +8,7 @@ a C implementation of [Emacs Hydra](https://github.com/abo-abo/hydra) package to
 To build from source:
 
 ```
-make build
+make
 ```
 
 # Hydra file
