@@ -23,7 +23,7 @@ in your `.bashrc` export environment variable `HYDRA` to has a list of hydras fi
 The following setup Hydra to load `git` commands
 
 ```
-HYDRA="/usr/share/hydra/hydras/git"
+export HYDRA="/usr/share/hydra/hydras/git"
 source /usr/share/hydra-completion.bash
 ```
 
