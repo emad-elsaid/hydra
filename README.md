@@ -24,7 +24,7 @@ The following setup Hydra to load `git` commands
 
 ```
 export HYDRA="/usr/share/hydra/hydras/git"
-source /usr/share/hydra-completion.bash
+source /usr/share/hydra/hydra-completion.bash
 ```
 
 loading `/usr/share/hydra-completion.bash` will bind `hydra` to `Space` key in your keyboard and will invoke `hydra` when the line is empty.
