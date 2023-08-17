@@ -200,6 +200,8 @@ int main(int argc, char** argv) {
 
     char choice = getch();
     Command* nextCommand = FindCommand(currentCommand, choice);
+    if( nextCommand == NULL )
+      break;
 
     if (nextCommand->command != NULL)
       system(nextCommand->command);
