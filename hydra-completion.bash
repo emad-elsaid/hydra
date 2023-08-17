@@ -11,7 +11,7 @@ _hydra(){
         return
     fi
 
-    hydra
+    hydra $HYDRA
 }
 
 bind -x '" ":_hydra'

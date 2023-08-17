@@ -11,6 +11,24 @@ To build from source:
 make
 ```
 
+## Install
+
+build and install
+```
+make
+sudo make install
+```
+
+in your `.bashrc` export environment variable `HYDRA` to has a list of hydras files. Hydra example files are installed under `/usr/share/hydra/hydras`.
+The following setup Hydra to load `git` commands
+
+```
+HYDRA="/usr/share/hydra/hydras/git"
+source /usr/share/hydra-completion.bash
+```
+
+loading `/usr/share/hydra-completion.bash` will bind `hydra` to `Space` key in your keyboard and will invoke `hydra` when the line is empty.
+
 ## Hydra file
 
 * Hydra files are simple CSV files that define the commands hydra can load.
