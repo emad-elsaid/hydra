@@ -1,5 +1,8 @@
 g,Git,
 gi,Init,git init
 gs,Status,git status
-gl,Log,git log
-gh,File History,git log -p -- `fzf`
+gl,Log,git log --oneline
+gp,Pull,git pull
+gb,Branch,
+gbl,List,git branch
+gbc,Create,read -p "New branch name: " branch; git branch $branch; git switch $branch
