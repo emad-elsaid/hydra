@@ -1,8 +1,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
+#include <string.h>
 
 #define ColorOff "\033[0m"
 #define Red "\033[0;31m"
@@ -68,18 +70,44 @@ void TreeAddCommand(Command *tree, char *keys, char *name, char *command) {
 }
 
 void PrintCommand(Command *c) {
+  struct winsize terminal;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &terminal);
+  int width = terminal.ws_col;
+
   if (c->name)
     printf("%s%s:%s\n", Blue, c->name, ColorOff);
 
+  // Find longest item
+  int maxLineWidth = 0;
   Command *child = c->children;
   while (child) {
+    int lineWidth = strlen(child->name);
+    if( lineWidth > maxLineWidth) maxLineWidth = lineWidth;
+
+    child = child->next;
+  }
+
+  maxLineWidth += 5; // a margin to the right of the item
+  if( maxLineWidth > width) maxLineWidth = width;
+
+  int items = width / (maxLineWidth+5); // 5 is extra character printed before each item
+
+  child = c->children;
+  int currentItem = 0;
+  while (child) {
+    currentItem++;
+
     if (child->children != 0) {
-      printf("%s%c%s %s➔%s %s+%s%s\t\t", Yellow, child->key, ColorOff, Purple,
-             ColorOff, Blue, child->name, ColorOff);
-    }else{
-      printf("%s%c%s %s➔%s %s\t\t", Yellow, child->key, ColorOff, Purple,
-             ColorOff, child->name);
+      printf("%s%c%s %s➔%s %s+%-*s%s", Yellow, child->key, ColorOff, Purple,
+             ColorOff, Blue,maxLineWidth, child->name, ColorOff);
+    } else {
+      printf("%s%c%s %s➔%s  %-*s", Yellow, child->key, ColorOff, Purple,
+             ColorOff, maxLineWidth, child->name);
     }
+
+    if (currentItem % items == 0)
+      printf("\n");
+
     child = child->next;
   }
 
