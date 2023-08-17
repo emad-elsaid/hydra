@@ -11,7 +11,7 @@ _hydra(){
         return
     fi
 
-    make run
+    hydra
 }
 
 bind -x '" ":_hydra'
