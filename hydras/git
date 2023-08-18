@@ -2,7 +2,8 @@ g,Git,
 gi,Init,git init
 gs,Status,git status
 gl,Log,git log --oneline
-gp,Pull,git pull
+gF,Pull,git pull
+gp,Push,git push
 gb,Branch,
 gbl,List,git branch
 gbc,Create,read -p "New branch name: " branch; git branch $branch; git switch $branch
