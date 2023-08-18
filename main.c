@@ -55,12 +55,18 @@ Command *FindCommand(Command *c, char key) {
 }
 
 void TreeAddCommand(Command *tree, char *keys, char *name, char *command) {
+  Command *c = FindCommand(tree, *keys);
+
   if (*(keys + 1) == 0) {
-    CommandAddChild(tree, NewCommand(*keys, name, command));
+    if( c == NULL ) {
+      CommandAddChild(tree, NewCommand(*keys, name, command));
+    } else { // if command already exists update name and command fields
+      c->name = name;
+      c->command = command;
+    }
     return;
   }
 
-  Command *c = FindCommand(tree, *keys);
   if (c == NULL) {
     c = NewCommand(*keys, "unnamed", 0);
     CommandAddChild(tree, c);
