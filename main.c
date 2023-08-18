@@ -15,6 +15,11 @@
 #define Cyan "\033[0;36m"
 #define White "\033[0;37m"
 
+// a margin to the right of the item
+#define RightMargin 5
+// a name used for commands that are not defined explictly
+#define DefaultName "unnamed"
+
 typedef struct Command {
   char key;
   char* name;
@@ -68,7 +73,7 @@ void TreeAddCommand(Command *tree, char *keys, char *name, char *command) {
   }
 
   if (c == NULL) {
-    c = NewCommand(*keys, "unnamed", 0);
+    c = NewCommand(*keys, DefaultName, 0);
     CommandAddChild(tree, c);
   }
 
@@ -93,10 +98,10 @@ void PrintCommand(Command *c) {
     child = child->next;
   }
 
-  maxLineWidth += 5; // a margin to the right of the item
+  maxLineWidth += RightMargin;
   if( maxLineWidth > width) maxLineWidth = width;
 
-  int items = width / (maxLineWidth+5); // 5 is extra character printed before each item
+  int itemsPerRow = width / (maxLineWidth+5); // 5 is extra character printed before each item
 
   child = c->children;
   int currentItem = 0;
@@ -111,7 +116,7 @@ void PrintCommand(Command *c) {
              ColorOff, maxLineWidth, child->name);
     }
 
-    if (currentItem % items == 0)
+    if (currentItem % itemsPerRow == 0)
       printf("\n");
 
     child = child->next;
