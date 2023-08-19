@@ -3,6 +3,20 @@ Hydra
 
 a C implementation of [Emacs Hydra](https://github.com/abo-abo/hydra) package to be used in terminal.
 
+## What is Hydra
+
+Just list Emacs Hydra. It's a program that groups your terminal commands and bind them to common key on your keyboard. Commands can also be grouped in a tree like structure each node in the tree has a name and key bound to it.
+
+[Spacemacs](https://www.spacemacs.org/) for example is an emacs configuration centered around hydra commands, with all user commands grouped as trees bound in a mnemonic way. for example:
+
+- openenig a file is bound to `space f f`
+- deleting current file is bound to `space f D`
+- Git status `space g s`
+
+This repo implements a program that can be invoked in your terminal, it reads CSV files of `key,name,command` lines then shows Terminal UI similar to Emacs Hydra.
+
+Binding Hydra to `space` key in your terminal mean pressing `space` will make your terminal similar to spacemacs. this repo has a bash script `hydra-completion.bash` which achieve this binding.
+
 ## Build
 
 To build from source:
