@@ -259,9 +259,7 @@ void Start(Command *c) {
     Command *nextCommand = FindCommand(c, choice);
     ClearLines(lastPrintedLines);
 
-    if (nextCommand->command != NULL) {
-       system(nextCommand->command);
-    }
+    if (nextCommand != NULL && nextCommand->command != NULL) system(nextCommand->command);
 
     c = nextCommand;
   }
