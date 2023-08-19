@@ -69,8 +69,7 @@ Hydra will load the files in the order passed.
 
 Here is an example running `hydras/git`
 
-[![asciicast](https://asciinema.org/a/Nwc0iETsYqHvGbIvk9lrQGxp9.svg)](https://asciinema.org/a/Nwc0iETsYqHvGbIvk9lrQGxp9)
-
+[![asciicast](https://asciinema.org/a/603564.svg)](https://asciinema.org/a/603564)
 
 
 ## Project status
