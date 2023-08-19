@@ -80,28 +80,39 @@ void TreeAddCommand(Command *tree, char *keys, char *name, char *command) {
   TreeAddCommand(c, keys + 1, name, command);
 }
 
-void PrintCommand(Command *c) {
+// Returns number of printed lines
+int PrintCommand(Command *c) {
+
   struct winsize terminal;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &terminal);
   int width = terminal.ws_col;
 
-  if (c->name)
+  // Keep track of how many characters printed
+  int lines = 0;
+
+  if (c->name) {
     printf("%s%s:%s\n", Blue, c->name, ColorOff);
+    lines++;
+  }
 
   // Find longest item
   int maxLineWidth = 0;
   Command *child = c->children;
   while (child) {
     int lineWidth = strlen(child->name);
-    if( lineWidth > maxLineWidth) maxLineWidth = lineWidth;
+    if (lineWidth > maxLineWidth)
+      maxLineWidth = lineWidth;
 
     child = child->next;
   }
 
   maxLineWidth += RightMargin;
-  if( maxLineWidth > width) maxLineWidth = width;
+  if (maxLineWidth > width)
+    maxLineWidth = width;
 
-  int itemsPerRow = width / (maxLineWidth+5); // 5 is extra character printed before each item
+  int itemsPerRow =
+      width /
+      (maxLineWidth + 5); // 5 is extra character printed before each item
 
   child = c->children;
   int currentItem = 0;
@@ -110,19 +121,24 @@ void PrintCommand(Command *c) {
 
     if (child->children != 0) {
       printf("%s%c%s %s➔%s %s+%-*s%s", Yellow, child->key, ColorOff, Purple,
-             ColorOff, Blue,maxLineWidth, child->name, ColorOff);
+             ColorOff, Blue, maxLineWidth, child->name, ColorOff);
     } else {
       printf("%s%c%s %s➔%s  %-*s", Yellow, child->key, ColorOff, Purple,
              ColorOff, maxLineWidth, child->name);
     }
 
-    if (currentItem % itemsPerRow == 0)
-      printf("\n");
+    if (currentItem % itemsPerRow == 0) {
+       printf("\n");
+       lines ++;
+    }
 
     child = child->next;
   }
 
   printf("\n");
+  lines ++;
+
+  return lines;
 }
 
 // Copied from: https://stackoverflow.com/a/912796/458436
@@ -219,37 +235,48 @@ void ReadLine(Command* c, char** file) {
   TreeAddCommand(c, key, name, command);
 }
 
-void LoadFile(Command *c, char* file) {
-  char* content = ReadFile(file);
-  while( *content != 0 ) ReadLine(c, &content);
+void ClearLines(int count) {
+  // make sure we print directly to stdout without bufferring
+  // This allow us to clear lines without waiting for new line
+  // without it executing `system` will output lines then our output will go after
+  setbuf(stdout, NULL);
+
+  for (int i = 0; i < count; i++)
+    printf("\033[A\r\33[2K");
 }
 
-int main(int argc, char** argv) {
+void LoadFile(Command *c, char *file) {
+  char *content = ReadFile(file);
+  while (*content != 0)
+    ReadLine(c, &content);
+}
+
+void Start(Command *c) {
+  while (c != NULL && c->children != NULL) {
+    int lastPrintedLines = PrintCommand(c);
+
+    char choice = getch();
+    Command *nextCommand = FindCommand(c, choice);
+    ClearLines(lastPrintedLines);
+
+    if (nextCommand->command != NULL) {
+       system(nextCommand->command);
+    }
+
+    c = nextCommand;
+  }
+}
+
+int main(int argc, char **argv) {
   if( argc == 1 ) {
     printf("Must provide at least one hydra file");
     return EXIT_FAILURE;
   }
 
-  Command* currentCommand = NewCommand(0, 0, 0);
+  Command* tree = NewCommand(0, 0, 0);
+  for(int i=1; i<argc; i++) LoadFile(tree, argv[i]);
 
-  for(int i=1; i<argc; i++) LoadFile(currentCommand, argv[i]);
-
-  while(true) {
-    PrintCommand(currentCommand);
-
-    char choice = getch();
-    Command* nextCommand = FindCommand(currentCommand, choice);
-    if( nextCommand == NULL )
-      break;
-
-    if (nextCommand->command != NULL)
-      system(nextCommand->command);
-
-    if (nextCommand->children == NULL)
-      break;
-
-    currentCommand = nextCommand;
-  }
+  Start(tree);
 
   return EXIT_SUCCESS;
 }
