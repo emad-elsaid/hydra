@@ -40,6 +40,11 @@ Command* NewCommand(char key, char* name, char* command) {
   return cmd;
 }
 
+void CommandRun(Command *c) {
+  if (c != NULL && c->command != NULL)
+    system(c->command);
+}
+
 void CommandAddChild(Command *c, Command *child) {
   Command *lastChild = c->children;
   if (lastChild == NULL) {
@@ -255,13 +260,9 @@ void Start(Command *c) {
   while (c != NULL && c->children != NULL) {
     int lastPrintedLines = PrintCommand(c);
 
-    char choice = getch();
-    Command *nextCommand = FindCommand(c, choice);
+    c = FindCommand(c, getch());
     ClearLines(lastPrintedLines);
-
-    if (nextCommand != NULL && nextCommand->command != NULL) system(nextCommand->command);
-
-    c = nextCommand;
+    CommandRun(c);
   }
 }
 
