@@ -15,7 +15,7 @@ Just list Emacs Hydra. It's a program that groups your terminal commands and bin
 
 This repo implements a program that can be invoked in your terminal, it reads CSV files of `key,name,command` lines then shows Terminal UI similar to Emacs Hydra.
 
-Binding Hydra to `space` key in your terminal mean pressing `space` will make your terminal similar to spacemacs. this repo has a bash script `hydra-completion.bash` which achieve this binding.
+Binding Hydra to `space` key in your terminal means pressing `space` will make your terminal behave similar to spacemacs. this repo has a bash script `hydra-completion.bash` which achieve this binding.
 
 ## Build
 
