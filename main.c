@@ -30,12 +30,10 @@ typedef struct Command {
 } Command;
 
 Command* NewCommand(char key, char* name, char* command) {
-  Command* cmd = (Command*) malloc(sizeof(Command));
+  Command* cmd = (Command*) calloc(1, sizeof(Command));
   cmd->key = key;
   cmd->name = name;
   cmd->command = command;
-  cmd->children = NULL;
-  cmd->next = NULL;
 
   return cmd;
 }
@@ -181,20 +179,19 @@ char* ReadFile(char* file) {
   long fileSize = ftell(f);
   rewind(f);
 
-  char* content = (char*) malloc(fileSize+1);
+  char* content = (char*) calloc(fileSize+1, sizeof(char));
   fread(content, fileSize, 1, f);
-  content[fileSize] = 0;
   fclose(f);
 
   return content;
 }
 
-char* ReadKey(char** file) {
+char* ReadField(char** file, char *field) {
   char* key = *file;
   while(**file != ',' && **file != '\n' && **file != 0) (*file)++;
 
   if( **file != ',') {
-    printf("Found incorrect end after key, found: %c", **file);
+    printf("Found incorrect end after %s, found: %c", field, * *file);
     exit(EXIT_FAILURE);
   }
 
@@ -204,24 +201,9 @@ char* ReadKey(char** file) {
   return key;
 }
 
-char *ReadName(char **file) {
-  char *name = *file;
-  while (**file != ',' && **file != '\n' && **file != 0)
-    (*file)++;
-
-  if (**file != ',') {
-    printf("Found incorrect end after name, found: %c", **file);
-    exit(EXIT_FAILURE);
-  }
-
-  **file = 0;
-  (*file)++;
-
-  return name;
-}
-
-char* ReadCommand(char** file) {
-  char* command = *file;
+// Read until end of line character
+char* ReadUntilEOL(char** file) {
+  char* s = *file;
   while(**file != '\n' && **file != 0) (*file)++;
 
   if(**file == '\n') {
@@ -229,13 +211,13 @@ char* ReadCommand(char** file) {
     (*file)++;
   }
 
-  return command;
+  return s;
 }
 
 void ReadLine(Command* c, char** file) {
-  char* key = ReadKey(file);
-  char* name = ReadName(file);
-  char* command = ReadCommand(file);
+  char* key = ReadField(file, "key");
+  char* name = ReadField(file, "name");
+  char* command = ReadUntilEOL(file);
 
   TreeAddCommand(c, key, name, command);
 }
