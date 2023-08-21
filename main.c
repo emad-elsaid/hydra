@@ -38,9 +38,11 @@ Command* NewCommand(char key, char* name, char* command) {
   return cmd;
 }
 
-void CommandRun(Command *c) {
+int CommandRun(Command *c) {
   if (c != NULL && c->command != NULL)
-    system(c->command);
+    return fprintf(stdout, "%s", c->command);
+
+  return 0;
 }
 
 void CommandAddChild(Command *c, Command *child) {
@@ -87,14 +89,14 @@ void TreeAddCommand(Command *tree, char *keys, char *name, char *command) {
 int PrintCommand(Command *c) {
 
   struct winsize terminal;
-  ioctl(STDOUT_FILENO, TIOCGWINSZ, &terminal);
+  ioctl(STDERR_FILENO, TIOCGWINSZ, &terminal);
   int width = terminal.ws_col;
 
   // Keep track of how many characters printed
   int lines = 0;
 
   if (c->name) {
-    printf("%s%s:%s\n", Blue, c->name, ColorOff);
+    fprintf(stderr, "%s%s:%s\n", Blue, c->name, ColorOff);
     lines++;
   }
 
@@ -123,22 +125,22 @@ int PrintCommand(Command *c) {
     currentItem++;
 
     if (child->children != 0) {
-      printf("%s%c%s %s➔%s %s+%-*s%s", Yellow, child->key, ColorOff, Purple,
+      fprintf(stderr, "%s%c%s %s➔%s %s+%-*s%s", Yellow, child->key, ColorOff, Purple,
              ColorOff, Blue, maxLineWidth, child->name, ColorOff);
     } else {
-      printf("%s%c%s %s➔%s  %-*s", Yellow, child->key, ColorOff, Purple,
+      fprintf(stderr, "%s%c%s %s➔%s  %-*s", Yellow, child->key, ColorOff, Purple,
              ColorOff, maxLineWidth, child->name);
     }
 
     if (currentItem % itemsPerRow == 0) {
-       printf("\n");
-       lines ++;
+      fprintf(stderr, "\n");
+      lines ++;
     }
 
     child = child->next;
   }
 
-  printf("\n");
+  fprintf(stderr, "\n");
   lines ++;
 
   return lines;
@@ -191,7 +193,7 @@ char* ReadField(char** file, char *field) {
   while(**file != ',' && **file != '\n' && **file != 0) (*file)++;
 
   if( **file != ',') {
-    printf("Found incorrect end after %s, found: %c", field, * *file);
+    fprintf(stderr, "Found incorrect end after %s, found: %c", field, * *file);
     exit(EXIT_FAILURE);
   }
 
@@ -229,7 +231,7 @@ void ClearLines(int count) {
   setbuf(stdout, NULL);
 
   for (int i = 0; i < count; i++)
-    printf("\033[A\r\33[2K");
+    fprintf(stderr, "\033[A\r\33[2K");
 }
 
 void LoadFile(Command *c, char *file) {
@@ -244,13 +246,15 @@ void Start(Command *c) {
 
     c = FindCommand(c, getch());
     ClearLines(lastPrintedLines);
-    CommandRun(c);
+    if( CommandRun(c) > 0 ){
+      return;
+    };
   }
 }
 
 int main(int argc, char **argv) {
   if( argc == 1 ) {
-    printf("Must provide at least one hydra file");
+    fprintf(stderr, "Must provide at least one hydra file");
     return EXIT_FAILURE;
   }
 
