@@ -1,9 +1,14 @@
 g,Git,
-gi,Init,git init
-gs,Status,git status
-gl,Log,git log --oneline
 gF,Pull,git pull
-gp,Push,git push
 gb,Branch,
-gbl,List,git branch
 gbc,Create,read -p "New branch name: " branch; git branch $branch; git switch $branch
+gbl,List,git branch
+gd,Diff,git diff
+gi,Init,git init
+gl,Log,git log --oneline
+gp,Push,git push
+gs,Status,git status
+gz,Stash,
+gzl,List,git stash list
+gzp,Pop,git stash pop
+gzz,Stash,git stash
