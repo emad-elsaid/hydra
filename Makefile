@@ -1,4 +1,4 @@
-build: main.c
+hydra: main.c
 	clang -O3 -o hydra main.c
 
 debug: main.c
