@@ -9,13 +9,19 @@ Just list Emacs Hydra. It's a program that groups your terminal commands and bin
 
 [Spacemacs](https://www.spacemacs.org/) for example is an emacs configuration centered around hydra commands, with all user commands grouped as trees bound in a mnemonic way. for example:
 
-- openenig a file is bound to `space f f`
+- opening a file is bound to `space f f`
 - deleting current file is bound to `space f D`
 - Git status `space g s`
 
-This repo implements a program that can be invoked in your terminal, it reads CSV files of `key,name,command` lines then shows Terminal UI similar to Emacs Hydra.
+This repo implements a program that can be invoked in your terminal, it reads CSV files of `key,name,command` lines then shows Terminal UI similar to Emacs Hydra and prints the command to stdout.
 
-Binding Hydra to `space` key in your terminal means pressing `space` will make your terminal behave similar to spacemacs. this repo has a bash script `hydra-completion.bash` which achieve this binding.
+Binding Hydra to `space` key in your terminal means pressing `space` will make your terminal behave similar to spacemacs if you executed the output with `eval`. this repo has a bash script `hydra-completion.bash` which achieve this binding.
+
+### Other usages
+
+`hydra` doesn't execute the command by default. the program prints the choosen command to standard output. what to do with this output is up to you. you can for example append it to a file. or open the browser with the output or whatever. just like `fzf`.
+
+This means you can use hydra as part of your scripts to allow the user to navigate a tree of choices and get the final choice piped to another program, GNU coreutils style.
 
 ## Build
 
