@@ -1,7 +1,7 @@
-build:
+build: main.c
 	clang -O3 -o hydra main.c
 
-debug:
+debug: main.c
 	@clang -g -Wall -o hydra main.c
 
 run: debug
