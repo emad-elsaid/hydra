@@ -1,11 +1,20 @@
-hydra: main.c
-	clang -O3 -o hydra main.c
+RELEASE_CFLAGS = -O3
+DBG_CFLAGS = -g -Wall
 
-debug: main.c
-	@clang -g -Wall -o hydra main.c
+hydra: main.c
+	clang $(RELEASE_CFLAGS) -o hydra main.c
+
+debug/hydra: main.c
+	mkdir -p debug
+	clang $(DBG_CFLAGS) -o debug/hydra main.c
+
+.PHONY: build, debug, run, install
+build: hydra
+
+debug: debug/hydra
 
 run: debug
-	@./hydra hydras/git
+	@./debug/hydra hydras/git
 
 install:
 	install -Dm755 hydra /usr/bin/hydra
