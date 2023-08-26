@@ -45,7 +45,7 @@ jobs:
         run: |
           xlog \
           --build . \
-          --sitename "𓆚 Hydra" \
+          --sitename "Hydra" \
           --index=README \
           --sitemap.domain=hydra.emadelsaid.com \
           --activitypub.domain=hydra.emadelsaid.com \
