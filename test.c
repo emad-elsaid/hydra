@@ -1,6 +1,7 @@
-#include "hydra.c"
+#include "hydra.h"
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 
 void TestStart(char *name) {
   setbuf(stdout, NULL);
@@ -11,6 +12,7 @@ void TestNewCommand() {
   TestStart("NewCommand");
 
   Command *cmd = NewCommand('k', "name", "command");
+
   assert(cmd != NULL);
   assert(cmd->key == 'k');
   assert(cmd->name != NULL && strcmp(cmd->name, "name") == 0);
@@ -30,6 +32,7 @@ void TestCommandAddChild() {
   CommandAddChild(parent, thirdChild);
   CommandAddChild(parent, firstChild);
   CommandAddChild(parent, secondChild);
+
   assert(parent->children == firstChild);
   assert(parent->children->next == secondChild);
   assert(parent->children->next->next == thirdChild);

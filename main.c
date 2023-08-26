@@ -1,4 +1,6 @@
-#include "hydra.c"
+#include "hydra.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv) {
   if( argc == 1 ) {

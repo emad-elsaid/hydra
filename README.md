@@ -77,6 +77,13 @@ Here is an example running `hydras/git`
 
 [![asciicast](https://asciinema.org/a/603564.svg)](https://asciinema.org/a/603564)
 
+## Tests
+
+To run tests execute
+
+```
+make run-test
+```
 
 ## Project status
 
