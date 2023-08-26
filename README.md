@@ -26,6 +26,15 @@ Binding 𓆚 Hydra to `space` key in your terminal means pressing `space` will m
 
 This means you can use 𓆚 Hydra as part of your scripts to allow the user to navigate a tree of choices and get the final choice piped to another program, GNU coreutils style.
 
+## Download
+
+Clone it from [github](https://github.com/emad-elsaid/hydra) to your machine
+
+```
+git clone git@github.com:emad-elsaid/hydra.git
+cd hydra
+```
+
 ## Build
 
 To build from source:
