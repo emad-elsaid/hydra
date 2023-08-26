@@ -3,6 +3,9 @@
 
 a C implementation of [Emacs Hydra](https://github.com/abo-abo/hydra) package to be used in terminal.
 
+<p align="center"><img width="256" src="public/logo.png" /></p>
+
+
 ## What is 𓆚 Hydra
 
 Just like Emacs 𓆚 Hydra. It's a program that groups your terminal commands and bind them to common key on your keyboard. Commands can also be grouped in a tree like structure each node in the tree has a name and key bound to it.
