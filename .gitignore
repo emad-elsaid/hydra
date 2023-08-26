@@ -1,2 +1,3 @@
 hydra
-debug/
+test
+*.o
