@@ -36,18 +36,18 @@ git clone git@github.com:emad-elsaid/hydra.git
 cd hydra
 ```
 * Build
-```
+```shell
 make
 ```
 * Install
-```
+```shell
 sudo make install
 ```
 
 * Export `HYDRA` variable to your `.bashrc`. it should have a list of hydras files. 𓆚 Hydra example files are installed under `/usr/share/hydra/hydras`.
 * Loading `/usr/share/hydra-completion.bash` will bind `hydra` to `Space` key in your keyboard and will invoke `hydra` when the line is empty.
 * For example to use the `git` 𓆚 Hydra:
-```
+```shell
 export HYDRA="/usr/share/hydra/hydras/git"
 source /usr/share/hydra/hydra-completion.bash
 ```
@@ -72,7 +72,7 @@ gs,Status,git status
 * 𓆚 Hydra will load the files in the order passed.
 * it will display the list of top level commands
 * When the program reaches a choosen command that doesn't have children it will print the command to standard output
-```
+```shell
 hydra hydras/git hydras/systemd hydras/github
 ```
 
@@ -80,6 +80,6 @@ hydra hydras/git hydras/systemd hydras/github
 
 To run tests execute
 
-```
+```shell
 make run-test
 ```
