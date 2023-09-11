@@ -21,6 +21,12 @@ int main(int argc, char **argv)
   {
     if (strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "--recursive") == 0)
     {
+      if (argv[i + 1] == NULL)
+      {
+        fprintf(stderr,"ERROR: Few arguments passed. Please pass folder name after 'recursive' flag");
+        return EXIT_FAILURE;
+      }
+
       recursive_mode = true;
       folder_name = (char *)malloc(strlen(argv[i + 1]) * sizeof(char));
       if (folder_name == NULL)
