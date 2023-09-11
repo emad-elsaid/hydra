@@ -1,0 +1,7 @@
+y,Yarn,
+yd,Dev,yarn dev
+yb,Build,yarn build
+yt,Test,yarn test
+yp,Package Manager,
+ypa,Add,read -p "Package name: " name; yarn add $name
+ypa,Remove,read -p "Package name: " name; yarn remove $name

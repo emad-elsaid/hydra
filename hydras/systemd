@@ -1,0 +1,7 @@
+s,Systemd,
+ss,Start Units,read -p "Units: " units; systemctl start $units
+sr,Stop Units,read -p "Units: " units; systemctl stop $units
+sl,Reload Units,read -p "Units: " units; systemctl reload $units
+se,Enable Unit,read -p "Unit name: " name; systemctl enable $name
+sd,Disable Unit,read -p "Unit name: " name; systemctl disable $name
+si,Is unit Enabled?,read -p "Unit name: " name; systemctl is-enabled $name

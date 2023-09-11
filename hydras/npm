@@ -1,0 +1,6 @@
+n,NPM,
+nt,Test,npm test
+nr,Run script,read -p "Script name: " name; npm run $name
+np,Package Manager,
+npi,Install all deps,npm install
+npa,Add dependency,read -p "Package name: " name; npm install $name
