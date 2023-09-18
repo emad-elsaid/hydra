@@ -1,0 +1,6 @@
+m,Make,
+mb,Build,make
+mc,Clean,make clean
+mi,Install,make install
+mr,Run,make run
+mt,Test,make test
