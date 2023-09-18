@@ -11,7 +11,6 @@ _hydra(){
         return
     fi
 
-    eval "$(hydra $HYDRA)"
+    eval $(hydra $HYDRA)
 }
-
-bind -x '" ":_hydra'
+bind -x '" ":_bash_stty_save=$(stty -g); stty sane; _hydra; stty "$_bash_stty_save"'
