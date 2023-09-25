@@ -1,0 +1,10 @@
+c,Cargo,
+cn,New Project,read -p "Project name: " name; cargo new $name
+cb,Build,
+cbd,debug,cargo build
+cbr,release,cargo build --release
+ct,Test,cargo test
+cd,Build docs,cargo doc
+cp,Package Manager,
+cpa,Add,read -p "Package name: " name; cargo add $name
+cpr,Remove,read -p "Package name: " name; cargo add $name

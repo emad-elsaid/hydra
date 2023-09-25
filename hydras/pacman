@@ -1,0 +1,6 @@
+p,Pacman,
+pi,Sync,read -p "Packages: " pkg;sudo pacman -S $pkg;
+pr,Remove,read -p "Packages: " pkg;sudo pacman -R $pkg
+pq,Query,read -p "Query: " query;pacman -Q $query
+pu,Upgrade system packages,sudo pacman -Syu
+pm,Refresh mirrors,sudo pacman-mirrors -c all
