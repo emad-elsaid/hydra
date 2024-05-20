@@ -41,7 +41,7 @@ jobs:
 
       - name: Build
         run: |
-          xlog \
+          ../xlog \
           --build . \
           --sitename "Hydra" \
           --index=README \
