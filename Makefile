@@ -1,3 +1,4 @@
+prefix ?= /usr
 CCFLAGS = -O3 -Wextra -Wall
 
 hydra: hydra.o main.c
@@ -13,9 +14,9 @@ run-test: test
 	./test
 
 install: hydra
-	install -Dm755 hydra /usr/bin/hydra
-	install -Dm755 hydra-completion.bash /usr/share/hydra/hydra-completion.bash
-	cp --recursive --force hydras /usr/share/hydra/
+	install -Dm755 hydra $(DESTDIR)$(prefix)/bin/hydra
+	install -Dm755 hydra-completion.bash $(DESTDIR)$(prefix)/share/hydra/hydra-completion.bash
+	cp --recursive --force hydras $(DESTDIR)$(prefix)/share/hydra/
 
 clean:
 	rm -f *.o hydra test
