@@ -21,6 +21,11 @@ typedef struct Command {
   struct Command* next;
 } Command;
 
+extern const char* colorTitle;
+extern const char* colorKey;
+extern const char* colorArrow;
+extern const char* colorCommand;
+
 Command* NewCommand(char key, char* name, char* command);
 int CommandRun(Command *c) ;
 void CommandAddChild(Command *c, Command *child) ;
@@ -37,4 +42,5 @@ char* ReadUntilEOL(char** file);
 void ReadLine(Command* c, char** file);
 void ClearLines(int count);
 void LoadFile(Command *c, char *file);
+void LoadColors(void);
 void Start(Command *c);
