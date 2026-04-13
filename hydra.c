@@ -7,6 +7,34 @@
 #include <unistd.h>
 #include <string.h>
 
+const char* colorTitle   = Blue;
+const char* colorKey     = Yellow;
+const char* colorArrow   = Purple;
+const char* colorCommand = Blue;
+
+static const char* ParseColor(const char* name, const char* def) {
+  if (!name) return def;
+  if (strcasecmp(name, "black")   == 0) return "\033[0;30m";
+  if (strcasecmp(name, "red")     == 0) return Red;
+  if (strcasecmp(name, "green")   == 0) return Green;
+  if (strcasecmp(name, "yellow")  == 0) return Yellow;
+  if (strcasecmp(name, "blue")    == 0) return Blue;
+  if (strcasecmp(name, "purple")  == 0 ||
+      strcasecmp(name, "magenta") == 0) return Purple;
+  if (strcasecmp(name, "cyan")    == 0) return Cyan;
+  if (strcasecmp(name, "white")   == 0) return White;
+  if (strcasecmp(name, "off")     == 0 ||
+      strcasecmp(name, "none")    == 0) return ColorOff;
+  return def;
+}
+
+void LoadColors(void) {
+  colorTitle   = ParseColor(getenv("HYDRA_COLOR_TITLE"),   Blue);
+  colorKey     = ParseColor(getenv("HYDRA_COLOR_KEY"),     Yellow);
+  colorArrow   = ParseColor(getenv("HYDRA_COLOR_ARROW"),   Purple);
+  colorCommand = ParseColor(getenv("HYDRA_COLOR_COMMAND"), Blue);
+}
+
 Command* NewCommand(char key, char* name, char* command) {
   Command* cmd = (Command*) calloc(1, sizeof(Command));
   cmd->key = key;
@@ -83,7 +111,7 @@ int PrintCommand(Command *c) {
   int lines = 0;
 
   if (c->name) {
-    fprintf(stderr, "%s%s:%s\n", Blue, c->name, ColorOff);
+    fprintf(stderr, "%s%s:%s\n", colorTitle, c->name, ColorOff);
     lines++;
   }
 
@@ -112,11 +140,11 @@ int PrintCommand(Command *c) {
     currentItem++;
 
     if (child->children != 0) {
-      fprintf(stderr, "%s%c%s %s➔%s %s+%-*s%s", Yellow, child->key, ColorOff, Purple,
-             ColorOff, Blue, maxLineWidth, child->name, ColorOff);
+      fprintf(stderr, "%s%c%s %s➔%s %s+%-*s%s", colorKey, child->key, ColorOff,
+              colorArrow, ColorOff, colorCommand, maxLineWidth, child->name, ColorOff);
     } else {
-      fprintf(stderr, "%s%c%s %s➔%s  %-*s", Yellow, child->key, ColorOff, Purple,
-             ColorOff, maxLineWidth, child->name);
+      fprintf(stderr, "%s%c%s %s➔%s  %-*s", colorKey, child->key, ColorOff,
+              colorArrow, ColorOff, maxLineWidth, child->name);
     }
 
     if (currentItem % itemsPerRow == 0) {
@@ -228,6 +256,7 @@ void LoadFile(Command *c, char *file) {
 }
 
 void Start(Command *c) {
+  LoadColors();
   while (c != NULL && c->children != NULL) {
     int lastPrintedLines = PrintCommand(c);
 

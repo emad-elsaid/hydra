@@ -76,6 +76,26 @@ gs,Status,git status
 hydra hydras/git hydras/systemd hydras/github
 ```
 
+# Theming
+
+The TUI colors are configurable via environment variables. Each variable accepts a color name:
+`black`, `red`, `green`, `yellow`, `blue`, `purple`, `magenta`, `cyan`, `white`, or `off` (no color).
+
+| Variable              | Default  | Role                          |
+|-----------------------|----------|-------------------------------|
+| `HYDRA_COLOR_TITLE`   | `blue`   | Category header               |
+| `HYDRA_COLOR_KEY`     | `yellow` | Key shortcut character        |
+| `HYDRA_COLOR_ARROW`   | `purple` | Arrow symbol `➔`              |
+| `HYDRA_COLOR_COMMAND` | `blue`   | Parent command name           |
+
+**Light terminal theme** — yellow and purple are hard to read on light backgrounds, so swap them out:
+
+```shell
+export HYDRA_COLOR_KEY=red
+export HYDRA_COLOR_ARROW=blue
+export HYDRA_COLOR_COMMAND=green
+```
+
 # Tests
 
 To run tests execute
